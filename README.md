@@ -68,5 +68,5 @@ max_depth = 7 # How deep in the tree do we want to report back paths
 important_paths = get_paths_above_threshold(
     data_copy, threshold_time, max_depth
 )
-print(important_paths[0]["value"])
+print(important_paths)
 ```
