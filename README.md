@@ -65,5 +65,8 @@ calculate_total_time(data)
 percentage_threshold = 20  # Threshold as a percentage of total time
 threshold_time = total_time * (percentage_threshold / 100)  # Convert percentage to actual time threshold
 max_depth = 7 # How deep in the tree do we want to report back paths
-print(data["children"][0]["total_time"])
+important_paths = get_paths_above_threshold(
+    data_copy, threshold_time, max_depth
+)
+print(important_paths[0]["value"])
 ```
