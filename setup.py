@@ -20,7 +20,7 @@ setup(
     package_dir={"": "src"},
     packages=find_packages("src"),
     python_requires=">=3.8.0",
-    install_requires=["tuna~=0.5.11"],
+    install_requires=[],
     extras_require=extras,
     classifiers=[
         "Development Status :: 3 - Alpha",

@@ -16,9 +16,9 @@ pip install git+https://github.com/muellerzr/tuna-interpreter
 ## How to Use
 
 1. Create a visualization for any imports you call in your code with `tuna`. You can do this multiple ways, such as `python3 -X importtime my_script.py 2> my_log.log` or `python3 -X importtime -m mymodule 2> module.log`
-2. Load in the logs via `tuna`: 
+2. Load in the logs via `tuna-interpreter`: 
 ```python
-from tuna._import_profile import read_import_profile
+from tuna_interpreter import read_import_profile
 
 data = read_import_profile("my_log.log")
 ```
@@ -30,8 +30,7 @@ data = read_import_profile("my_log.log")
 Will calculate the total time each tree in the `data` takes up by summing all of the times calculated down each node. This is an inplace operation, and will add a new key (`total_time`) to each node.
 
 ```python
-from tuna._import_profile import read_import_profile
-from tuna_interpreter import calculate_total_time
+from tuna_interpreter import read_import_profile, calculate_total_time
 
 data = read_import_profile(...)
 total_time = calculate_total_time(data)
@@ -43,8 +42,7 @@ Will sort all children of the passed in tree inplace based on the
 total time
 
 ```python
-from tuna._import_profile import read_import_profile
-from tuna_interpreter import calculate_total_time
+from tuna_interpreter import read_import_profile, calculate_total_time
 
 data = read_import_profile(...)
 calculate_total_time(data)
@@ -57,8 +55,7 @@ A useful function that will take all of the nodes in `data` and then limit them 
 Helpful in cases where you only want import paths which take up >30% of the time, or a particular minimum amount of seconds to start debugging
 
 ```python
-from tuna._import_profile import read_import_profile
-from tuna_interpreter import calculate_total_time
+from tuna_interpreter import read_import_profile, calculate_total_time
 
 data = read_import_profile(...)
 calculate_total_time(data)

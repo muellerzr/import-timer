@@ -1,6 +1,8 @@
 # Only outside dep we need, to read in an existing profile
 
 
+
+
 def calculate_total_time(node):
     """
     Modifies `node` inplace and adds a new key for `total_time`.
