@@ -1,5 +1,5 @@
 # Copyright: This code comes from the `tuna` package, which is licensed under the MIT License.
-
+import logging
 from .module_groups import built_in, built_in_deprecated
 
 def read_import_profile(filename):
@@ -27,7 +27,7 @@ def read_import_profile(filename):
             # skip first line
             next(f)
         except UnicodeError:
-            raise TunaError()
+            raise ValueError()
 
         for line in f:
             if not line.startswith("import time: "):
