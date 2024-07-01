@@ -2,7 +2,7 @@
 import logging
 from .module_groups import built_in, built_in_deprecated
 
-def read_import_profile(filename):
+def read_import_profile(data):
     # The import profile is of the form
     # ```
     # import time: self [us] | cumulative | imported package
@@ -21,32 +21,25 @@ def read_import_profile(filename):
     # above example, `encodings` is parent to `encodings.aliases` and `codecs` which in
     # turn is parent to `_codecs`.
     entries = []
-    with open(filename, encoding="utf-8") as f:
-        # filtered iterator over lines prefixed with "import time: "
-        try:
-            # skip first line
-            next(f)
-        except UnicodeError:
-            raise ValueError()
+    data = data.split("\n")
+    for line in data[1:]:
+        if not line.startswith("import time: "):
+            logging.warning(f"Didn't recognize and skipped line `{line.rstrip()}`")
+            continue
 
-        for line in f:
-            if not line.startswith("import time: "):
-                logging.warning(f"Didn't recognize and skipped line `{line.rstrip()}`")
-                continue
+        line = line[len("import time: ") :].rstrip()
 
-            line = line[len("import time: ") :].rstrip()
-
-            if line == "self [us] | cumulative | imported package":
-                continue
-            items = line.split(" | ")
-            assert len(items) == 3
-            self_time = int(items[0])
-            last = items[2]
-            name = last.lstrip()
-            num_leading_spaces = len(last) - len(name)
-            assert num_leading_spaces % 2 == 0
-            indentation_level = num_leading_spaces // 2 + 1
-            entries.append((name, indentation_level, self_time))
+        if line == "self [us] | cumulative | imported package":
+            continue
+        items = line.split(" | ")
+        assert len(items) == 3
+        self_time = int(items[0])
+        last = items[2]
+        name = last.lstrip()
+        num_leading_spaces = len(last) - len(name)
+        assert num_leading_spaces % 2 == 0
+        indentation_level = num_leading_spaces // 2 + 1
+        entries.append((name, indentation_level, self_time))
 
     tree = _sort_into_tree(entries[::-1])
 
