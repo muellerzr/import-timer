@@ -1,26 +1,30 @@
-# tuna-interpreter
-Pragmatic approach to parsing `tuna` import profiles
+# import-timer
+Pragmatic approach to parsing `importtime` import profiles
 
 While [tuna](https://github.com/nschloe/tuna/tree/main) is a fantastic way to visualize slowdowns in your python code, it lacks a native python-parsing API to allow for CI-based checks to determine or automatically flag if code is suddenly much slower (such as due to new imports). 
 
-`tuna-interpreter` acts as a middle-ground. Create a profile using tuna, then read it in with our utilities to help you parse and interrogate the graph by hand, establish baselines, and then let you apply these easily later in your tests.
+`import-timer` acts as a middle-ground. Create a profile using `python -X importtime`, then read it in with our utilities to help you parse and interrogate the graph by hand, establish baselines, and then let you apply these easily later in your tests.
 
 ## Installation
 
-For now, please install via github:
-
 ```bash
-pip install git+https://github.com/muellerzr/tuna-interpreter
+pip install import-timer
 ```
 
 ## How to Use
 
-1. Create a visualization for any imports you call in your code with `tuna`. You can do this multiple ways, such as `python3 -X importtime my_script.py 2> my_log.log` or `python3 -X importtime -m mymodule 2> module.log`
-2. Load in the logs via `tuna-interpreter`: 
-```python
-from tuna_interpreter import read_import_profile
+1. In an interactive instance, create an `importtime` log using `python -X` such as:
 
-data = read_import_profile("my_log.log")
+```python
+import subprocess
+output = subprocess.run(["python3", "-X", "importtime", "-c", command], capture_output=True, text=True)
+```
+
+2. Load in the logs via `import-timer`: 
+```python
+from import-timer import read_import_profile
+
+data = read_import_profile(output)
 ```
 3. Interrogate your log using our helpers.
 
@@ -30,7 +34,7 @@ data = read_import_profile("my_log.log")
 Will calculate the total time each tree in the `data` takes up by summing all of the times calculated down each node. This is an inplace operation, and will add a new key (`total_time`) to each node.
 
 ```python
-from tuna_interpreter import read_import_profile, calculate_total_time
+from import_timer import read_import_profile, calculate_total_time
 
 data = read_import_profile(...)
 total_time = calculate_total_time(data)
@@ -42,7 +46,7 @@ Will sort all children of the passed in tree inplace based on the
 total time
 
 ```python
-from tuna_interpreter import read_import_profile, calculate_total_time
+from import_timer import read_import_profile, calculate_total_time
 
 data = read_import_profile(...)
 calculate_total_time(data)
@@ -55,7 +59,7 @@ A useful function that will take all of the nodes in `data` and then limit them 
 Helpful in cases where you only want import paths which take up >30% of the time, or a particular minimum amount of seconds to start debugging
 
 ```python
-from tuna_interpreter import read_import_profile, calculate_total_time
+from import_timer import read_import_profile, calculate_total_time
 
 data = read_import_profile(...)
 calculate_total_time(data)
@@ -67,3 +71,5 @@ important_paths = get_paths_above_threshold(
 )
 print(important_paths)
 ```
+
+Explore our `tests/` to see more, or this [PR where this library was first utilized](https://github.com/huggingface/accelerate/pull/2845)
