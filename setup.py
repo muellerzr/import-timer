@@ -7,7 +7,7 @@ extras["test"] = ["pytest"]
 
 
 setup(
-    name="setup-timer",
+    name="import-timer",
     version="0.0.1",
     description="A pragmatic approach to interpreting `importtime` import profiles.",
     long_description=open("README.md", encoding="utf-8").read(),
