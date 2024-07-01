@@ -21,7 +21,8 @@ def read_import_profile(data):
     # above example, `encodings` is parent to `encodings.aliases` and `codecs` which in
     # turn is parent to `_codecs`.
     entries = []
-    data = data.split("\n")
+    if isinstance(data, str):
+        data = data.split("\n")
     for line in data[1:]:
         if not line.startswith("import time: "):
             logging.warning(f"Didn't recognize and skipped line `{line.rstrip()}`")
